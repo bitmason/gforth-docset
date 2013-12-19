@@ -1,0 +1,280 @@
+<html lang="en">
+<head>
+<title>Input - Gforth Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="Gforth Manual">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="start" href="index.html#Top">
+<link rel="up" href="Other-I_002fO.html#Other-I_002fO" title="Other I/O">
+<link rel="prev" href="Terminal-output.html#Terminal-output" title="Terminal output">
+<link rel="next" href="Pipes.html#Pipes" title="Pipes">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+This manual is for Gforth (version 0.6.9-20070604, June 02, 2007),
+a fast and portable implementation of the ANS Forth language.  It
+serves as reference manual, but it also contains an introduction to
+Forth and a Forth tutorial.
+
+Copyright (C) 1995, 1996, 1997, 1998, 2000, 2003, 2004,2005,2006 Free Software Foundation, Inc.
+
+     Permission is granted to copy, distribute and/or modify this
+     document under the terms of the GNU Free Documentation License,
+     Version 1.1 or any later version published by the Free Software
+     Foundation; with no Invariant Sections, with the Front-Cover texts
+     being ``A GNU Manual,'' and with the Back-Cover Texts as in (a)
+     below.  A copy of the license is included in the section entitled
+     ``GNU Free Documentation License.''
+
+     (a) The FSF's Back-Cover Text is: ``You have freedom to copy and
+     modify this GNU Manual, like GNU software.  Copies published by
+     the Free Software Foundation raise funds for GNU development.''
+   -->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<div class="node">
+<p>
+<a name="Input"></a>
+Next:&nbsp;<a rel="next" accesskey="n" href="Pipes.html#Pipes">Pipes</a>,
+Previous:&nbsp;<a rel="previous" accesskey="p" href="Terminal-output.html#Terminal-output">Terminal output</a>,
+Up:&nbsp;<a rel="up" accesskey="u" href="Other-I_002fO.html#Other-I_002fO">Other I/O</a>
+<hr>
+</div>
+
+<h4 class="subsection">5.19.6 Input</h4>
+
+<p><a name="index-input-2056"></a><a name="index-I_002fO-_002d-see-input-2057"></a><a name="index-parsing-a-string-2058"></a>
+For ways of storing character strings in memory see <a href="String-Formats.html#String-Formats">String Formats</a>.
+
+<!-- TODO examples for >number >float accept key key? pad parse word refill -->
+<!-- then index them -->
+<p><a name="index-key-_0040var_007b-_002d_002d-char---_007d--core-2059"></a><a name="index-g_t_0040code_007bkey_007d-2060"></a><a name="index-key-2061"></a>
+<pre class="format"><code>key</code>       <i>&ndash; char  </i>       core       &ldquo;key&rdquo;
+</pre>
+   <p>Receive (but do not display) one character, <var>char</var>.
+
+   <p><a name="index-key_003f-_0040var_007b-_002d_002d-flag---_007d--facility-2062"></a><a name="index-g_t_0040code_007bkey_003f_007d-2063"></a><a name="index-key_003f-2064"></a>
+<pre class="format"><code>key?</code>       <i>&ndash; flag  </i>       facility       &ldquo;key-question&rdquo;
+</pre>
+   <p>Determine whether a character is available. If a character is
+available, <var>flag</var> is true; the next call to <code>key</code> will
+yield the character. Once <code>key?</code> returns true, subsequent
+calls to <code>key?</code> before calling <code>key</code> or <code>ekey</code> will
+also return true.
+
+   <p><a name="index-ekey-_0040var_007b-_002d_002d-u---_007d--facility_002dext-2065"></a><a name="index-g_t_0040code_007bekey_007d-2066"></a><a name="index-ekey-2067"></a>
+<pre class="format"><code>ekey</code>       <i>&ndash; u  </i>       facility-ext       &ldquo;e-key&rdquo;
+</pre>
+   <p>Receive a keyboard event <var>u</var> (encoding implementation-defined).
+
+   <p><a name="index-ekey_003echar-_0040var_007b-u-_002d_002d-u-false-_007c-c-true---_007d--facility_002dext-2068"></a><a name="index-g_t_0040code_007bekey_003echar_007d-2069"></a><a name="index-ekey_003echar-2070"></a>
+<pre class="format"><code>ekey&gt;char</code>       <i>u &ndash; u false | c true  </i>       facility-ext       &ldquo;e-key-to-char&rdquo;
+</pre>
+   <p>Convert keyboard event <var>u</var> into character <code>c</code> if possible.
+
+   <p><a name="index-ekey_003f-_0040var_007b-_002d_002d-flag---_007d--facility_002dext-2071"></a><a name="index-g_t_0040code_007bekey_003f_007d-2072"></a><a name="index-ekey_003f-2073"></a>
+<pre class="format"><code>ekey?</code>       <i>&ndash; flag  </i>       facility-ext       &ldquo;e-key-question&rdquo;
+</pre>
+   <p>True if a keyboard event is available.
+
+   <p>Gforth recognizes various keys available on ANSI terminals (in MS-DOS
+you need the ANSI.SYS driver to get that behaviour).  These are the
+keyboard events produced by various common keys:
+
+   <p><a name="index-k_002dleft-_0040var_007b-_002d_002d-u---_007d--gforth-2074"></a><a name="index-g_t_0040code_007bk_002dleft_007d-2075"></a><a name="index-k_002dleft-2076"></a>
+<pre class="format"><code>k-left</code>       <i>&ndash; u  </i>       gforth       &ldquo;k-left&rdquo;
+</pre>
+   <p><a name="index-k_002dright-_0040var_007b-_002d_002d-u---_007d--gforth-2077"></a><a name="index-g_t_0040code_007bk_002dright_007d-2078"></a><a name="index-k_002dright-2079"></a>
+<pre class="format"><code>k-right</code>       <i>&ndash; u  </i>       gforth       &ldquo;k-right&rdquo;
+</pre>
+   <p>doc-k-up
+doc-k-down
+doc-k-home
+doc-k-end
+<a name="index-k_002dprior-_0040var_007b-_002d_002d-u---_007d--gforth-2080"></a><a name="index-g_t_0040code_007bk_002dprior_007d-2081"></a><a name="index-k_002dprior-2082"></a>
+<pre class="format"><code>k-prior</code>       <i>&ndash; u  </i>       gforth       &ldquo;k-prior&rdquo;
+</pre>
+   <p>aka PgUp
+
+   <p><a name="index-k_002dnext-_0040var_007b-_002d_002d-u---_007d--gforth-2083"></a><a name="index-g_t_0040code_007bk_002dnext_007d-2084"></a><a name="index-k_002dnext-2085"></a>
+<pre class="format"><code>k-next</code>       <i>&ndash; u  </i>       gforth       &ldquo;k-next&rdquo;
+</pre>
+   <p>aka PgDn
+
+   <p><a name="index-k_002dinsert-_0040var_007b-_002d_002d-u---_007d--gforth-2086"></a><a name="index-g_t_0040code_007bk_002dinsert_007d-2087"></a><a name="index-k_002dinsert-2088"></a>
+<pre class="format"><code>k-insert</code>       <i>&ndash; u  </i>       gforth       &ldquo;k-insert&rdquo;
+</pre>
+   <p><a name="index-k_002ddelete-_0040var_007b-_002d_002d-u---_007d--gforth-2089"></a><a name="index-g_t_0040code_007bk_002ddelete_007d-2090"></a><a name="index-k_002ddelete-2091"></a>
+<pre class="format"><code>k-delete</code>       <i>&ndash; u  </i>       gforth       &ldquo;k-delete&rdquo;
+</pre>
+   <p>The function keys (aka keypad keys) are:
+
+   <p><a name="index-k1-_0040var_007b-_002d_002d-u---_007d--gforth-2092"></a><a name="index-g_t_0040code_007bk1_007d-2093"></a><a name="index-k1-2094"></a>
+<pre class="format"><code>k1</code>       <i>&ndash; u  </i>       gforth       &ldquo;k1&rdquo;
+</pre>
+   <p><a name="index-k2-_0040var_007b-_002d_002d-u---_007d--gforth-2095"></a><a name="index-g_t_0040code_007bk2_007d-2096"></a><a name="index-k2-2097"></a>
+<pre class="format"><code>k2</code>       <i>&ndash; u  </i>       gforth       &ldquo;k2&rdquo;
+</pre>
+   <p><a name="index-k3-_0040var_007b-_002d_002d-u---_007d--gforth-2098"></a><a name="index-g_t_0040code_007bk3_007d-2099"></a><a name="index-k3-2100"></a>
+<pre class="format"><code>k3</code>       <i>&ndash; u  </i>       gforth       &ldquo;k3&rdquo;
+</pre>
+   <p><a name="index-k4-_0040var_007b-_002d_002d-u---_007d--gforth-2101"></a><a name="index-g_t_0040code_007bk4_007d-2102"></a><a name="index-k4-2103"></a>
+<pre class="format"><code>k4</code>       <i>&ndash; u  </i>       gforth       &ldquo;k4&rdquo;
+</pre>
+   <p><a name="index-k5-_0040var_007b-_002d_002d-u---_007d--gforth-2104"></a><a name="index-g_t_0040code_007bk5_007d-2105"></a><a name="index-k5-2106"></a>
+<pre class="format"><code>k5</code>       <i>&ndash; u  </i>       gforth       &ldquo;k5&rdquo;
+</pre>
+   <p><a name="index-k6-_0040var_007b-_002d_002d-u---_007d--gforth-2107"></a><a name="index-g_t_0040code_007bk6_007d-2108"></a><a name="index-k6-2109"></a>
+<pre class="format"><code>k6</code>       <i>&ndash; u  </i>       gforth       &ldquo;k6&rdquo;
+</pre>
+   <p><a name="index-k7-_0040var_007b-_002d_002d-u---_007d--gforth-2110"></a><a name="index-g_t_0040code_007bk7_007d-2111"></a><a name="index-k7-2112"></a>
+<pre class="format"><code>k7</code>       <i>&ndash; u  </i>       gforth       &ldquo;k7&rdquo;
+</pre>
+   <p><a name="index-k8-_0040var_007b-_002d_002d-u---_007d--gforth-2113"></a><a name="index-g_t_0040code_007bk8_007d-2114"></a><a name="index-k8-2115"></a>
+<pre class="format"><code>k8</code>       <i>&ndash; u  </i>       gforth       &ldquo;k8&rdquo;
+</pre>
+   <p><a name="index-k9-_0040var_007b-_002d_002d-u---_007d--gforth-2116"></a><a name="index-g_t_0040code_007bk9_007d-2117"></a><a name="index-k9-2118"></a>
+<pre class="format"><code>k9</code>       <i>&ndash; u  </i>       gforth       &ldquo;k9&rdquo;
+</pre>
+   <p><a name="index-k10-_0040var_007b-_002d_002d-u---_007d--gforth-2119"></a><a name="index-g_t_0040code_007bk10_007d-2120"></a><a name="index-k10-2121"></a>
+<pre class="format"><code>k10</code>       <i>&ndash; u  </i>       gforth       &ldquo;k10&rdquo;
+</pre>
+   <p><a name="index-k11-_0040var_007b-_002d_002d-u---_007d--gforth-2122"></a><a name="index-g_t_0040code_007bk11_007d-2123"></a><a name="index-k11-2124"></a>
+<pre class="format"><code>k11</code>       <i>&ndash; u  </i>       gforth       &ldquo;k11&rdquo;
+</pre>
+   <p><a name="index-k12-_0040var_007b-_002d_002d-u---_007d--gforth-2125"></a><a name="index-g_t_0040code_007bk12_007d-2126"></a><a name="index-k12-2127"></a>
+<pre class="format"><code>k12</code>       <i>&ndash; u  </i>       gforth       &ldquo;k12&rdquo;
+</pre>
+   <p>Note that K11 and K12 are not as widely available.  The shifted
+function keys are also not very widely available:
+
+   <p><a name="index-s_002dk1-_0040var_007b-_002d_002d-u---_007d--gforth-2128"></a><a name="index-g_t_0040code_007bs_002dk1_007d-2129"></a><a name="index-s_002dk1-2130"></a>
+<pre class="format"><code>s-k1</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k1&rdquo;
+</pre>
+   <p><a name="index-s_002dk2-_0040var_007b-_002d_002d-u---_007d--gforth-2131"></a><a name="index-g_t_0040code_007bs_002dk2_007d-2132"></a><a name="index-s_002dk2-2133"></a>
+<pre class="format"><code>s-k2</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k2&rdquo;
+</pre>
+   <p><a name="index-s_002dk3-_0040var_007b-_002d_002d-u---_007d--gforth-2134"></a><a name="index-g_t_0040code_007bs_002dk3_007d-2135"></a><a name="index-s_002dk3-2136"></a>
+<pre class="format"><code>s-k3</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k3&rdquo;
+</pre>
+   <p><a name="index-s_002dk4-_0040var_007b-_002d_002d-u---_007d--gforth-2137"></a><a name="index-g_t_0040code_007bs_002dk4_007d-2138"></a><a name="index-s_002dk4-2139"></a>
+<pre class="format"><code>s-k4</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k4&rdquo;
+</pre>
+   <p><a name="index-s_002dk5-_0040var_007b-_002d_002d-u---_007d--gforth-2140"></a><a name="index-g_t_0040code_007bs_002dk5_007d-2141"></a><a name="index-s_002dk5-2142"></a>
+<pre class="format"><code>s-k5</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k5&rdquo;
+</pre>
+   <p><a name="index-s_002dk6-_0040var_007b-_002d_002d-u---_007d--gforth-2143"></a><a name="index-g_t_0040code_007bs_002dk6_007d-2144"></a><a name="index-s_002dk6-2145"></a>
+<pre class="format"><code>s-k6</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k6&rdquo;
+</pre>
+   <p><a name="index-s_002dk7-_0040var_007b-_002d_002d-u---_007d--gforth-2146"></a><a name="index-g_t_0040code_007bs_002dk7_007d-2147"></a><a name="index-s_002dk7-2148"></a>
+<pre class="format"><code>s-k7</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k7&rdquo;
+</pre>
+   <p><a name="index-s_002dk8-_0040var_007b-_002d_002d-u---_007d--gforth-2149"></a><a name="index-g_t_0040code_007bs_002dk8_007d-2150"></a><a name="index-s_002dk8-2151"></a>
+<pre class="format"><code>s-k8</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k8&rdquo;
+</pre>
+   <p><a name="index-s_002dk9-_0040var_007b-_002d_002d-u---_007d--gforth-2152"></a><a name="index-g_t_0040code_007bs_002dk9_007d-2153"></a><a name="index-s_002dk9-2154"></a>
+<pre class="format"><code>s-k9</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k9&rdquo;
+</pre>
+   <p><a name="index-s_002dk10-_0040var_007b-_002d_002d-u---_007d--gforth-2155"></a><a name="index-g_t_0040code_007bs_002dk10_007d-2156"></a><a name="index-s_002dk10-2157"></a>
+<pre class="format"><code>s-k10</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k10&rdquo;
+</pre>
+   <p><a name="index-s_002dk11-_0040var_007b-_002d_002d-u---_007d--gforth-2158"></a><a name="index-g_t_0040code_007bs_002dk11_007d-2159"></a><a name="index-s_002dk11-2160"></a>
+<pre class="format"><code>s-k11</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k11&rdquo;
+</pre>
+   <p><a name="index-s_002dk12-_0040var_007b-_002d_002d-u---_007d--gforth-2161"></a><a name="index-g_t_0040code_007bs_002dk12_007d-2162"></a><a name="index-s_002dk12-2163"></a>
+<pre class="format"><code>s-k12</code>       <i>&ndash; u  </i>       gforth       &ldquo;s-k12&rdquo;
+</pre>
+   <p>Words for inputting one line from the keyboard:
+
+   <p><a name="index-accept-_0040var_007b-c_002daddr-_002bn1-_002d_002d-_002bn2---_007d--core-2164"></a><a name="index-g_t_0040code_007baccept_007d-2165"></a><a name="index-accept-2166"></a>
+<pre class="format"><code>accept</code>       <i>c-addr +n1 &ndash; +n2  </i>       core       &ldquo;accept&rdquo;
+</pre>
+   <p>Get a string of up to <var>n1</var> characters from the user input
+device and store it at <var>c-addr</var>.  <var>n2</var> is the length of
+the received string. The user indicates the end by pressing
+&lt;RET&gt;.  Gforth supports all the editing functions available
+on the Forth command line (including history and word
+completion) in <code>accept</code>.
+
+   <p><a name="index-edit_002dline-_0040var_007b-c_002daddr-n1-n2-_002d_002d-n3---_007d--gforth-2167"></a><a name="index-g_t_0040code_007bedit_002dline_007d-2168"></a><a name="index-edit_002dline-2169"></a>
+<pre class="format"><code>edit-line</code>       <i>c-addr n1 n2 &ndash; n3  </i>       gforth       &ldquo;edit-line&rdquo;
+</pre>
+   <p>edit the string with length <var>n2</var> in the buffer <var>c-addr
+n1</var>, like <code>accept</code>.
+
+   <p>Conversion words:
+
+   <p><a name="index-s_003enumber_003f-_0040var_007b-addr-u-_002d_002d-d-f---_007d--gforth-2170"></a><a name="index-g_t_0040code_007bs_003enumber_003f_007d-2171"></a><a name="index-s_003enumber_003f-2172"></a>
+<pre class="format"><code>s&gt;number?</code>       <i>addr u &ndash; d f  </i>       gforth       &ldquo;s&gt;number?&rdquo;
+</pre>
+   <p>converts string addr u into d, flag indicates success
+
+   <p><a name="index-s_003eunumber_003f-_0040var_007b-addr-u-_002d_002d-ud-flag---_007d--gforth-2173"></a><a name="index-g_t_0040code_007bs_003eunumber_003f_007d-2174"></a><a name="index-s_003eunumber_003f-2175"></a>
+<pre class="format"><code>s&gt;unumber?</code>       <i>addr u &ndash; ud flag  </i>       gforth       &ldquo;s&gt;unumber?&rdquo;
+</pre>
+   <p>converts string addr u into ud, flag indicates success
+
+   <p><a name="index-g_t_003enumber-_0040var_007b-ud1-c_002daddr1-u1-_002d_002d-ud2-c_002daddr2-u2---_007d--core-2176"></a><a name="index-g_t_0040code_007b_003enumber_007d-2177"></a><a name="index-g_t_003enumber-2178"></a>
+<pre class="format"><code>&gt;number</code>       <i>ud1 c-addr1 u1 &ndash; ud2 c-addr2 u2  </i>       core       &ldquo;to-number&rdquo;
+</pre>
+   <p>Attempt to convert the character string <var>c-addr1 u1</var> to an
+unsigned number in the current number base. The double
+<var>ud1</var> accumulates the result of the conversion to form
+<var>ud2</var>. Conversion continues, left-to-right, until the whole
+string is converted or a character that is not convertable in
+the current number base is encountered (including + or -). For
+each convertable character, <var>ud1</var> is first multiplied by
+the value in <code>BASE</code> and then incremented by the value
+represented by the character. <var>c-addr2</var> is the location of
+the first unconverted character (past the end of the string if
+the whole string was converted). <var>u2</var> is the number of
+unconverted characters in the string. Overflow is not detected.
+
+   <p><a name="index-g_t_003efloat-_0040var_007b-c_002daddr-u-_002d_002d-f_003a_002e_002e_002e-flag--_007d--float-2179"></a><a name="index-g_t_0040code_007b_003efloat_007d-2180"></a><a name="index-g_t_003efloat-2181"></a>
+<pre class="format"><code>&gt;float</code>       <i>c-addr u &ndash; f:... flag </i>       float       &ldquo;to-float&rdquo;
+</pre>
+   <p>Actual stack effect: ( c_addr u &ndash; r t | f ).  Attempt to convert the
+character string <i>c-addr u</i> to internal floating-point
+representation. If the string represents a valid floating-point number
+<i>r</i> is placed on the floating-point stack and <i>flag</i> is
+true. Otherwise, <i>flag</i> is false. A string of blanks is a special
+case and represents the floating-point number 0.
+
+<!-- obsolescent words.. -->
+<p>Obsolescent input and conversion words:
+
+   <p><a name="index-convert-_0040var_007b-ud1-c_002daddr1-_002d_002d-ud2-c_002daddr2---_007d--core_002dext-2182"></a><a name="index-g_t_0040code_007bconvert_007d-2183"></a><a name="index-convert-2184"></a>
+<pre class="format"><code>convert</code>       <i>ud1 c-addr1 &ndash; ud2 c-addr2  </i>       core-ext       &ldquo;convert&rdquo;
+</pre>
+   <p>OBSOLESCENT: superseded by <code>&gt;number</code>.
+
+   <p><a name="index-expect-_0040var_007b-c_002daddr-_002bn-_002d_002d---_007d--core_002dext-2185"></a><a name="index-g_t_0040code_007bexpect_007d-2186"></a><a name="index-expect-2187"></a>
+<pre class="format"><code>expect</code>       <i>c-addr +n &ndash;  </i>       core-ext       &ldquo;expect&rdquo;
+</pre>
+   <p>Receive a string of at most <i>+n</i> characters, and store it
+in memory starting at <i>c-addr</i>. The string is
+displayed. Input terminates when the &lt;return&gt; key is pressed or
+<i>+n</i> characters have been received. The normal Gforth line
+editing capabilites are available. The length of the string is
+stored in <code>span</code>; it does not include the &lt;return&gt;
+character. OBSOLESCENT: superceeded by <code>accept</code>.
+
+   <p><a name="index-span-_0040var_007b-_002d_002d-c_002daddr---_007d--core_002dext-2188"></a><a name="index-g_t_0040code_007bspan_007d-2189"></a><a name="index-span-2190"></a>
+<pre class="format"><code>span</code>       <i>&ndash; c-addr  </i>       core-ext       &ldquo;span&rdquo;
+</pre>
+   <p><code>Variable</code> &ndash; <i>c-addr</i> is the address of a cell that stores the
+length of the last string received by <code>expect</code>. OBSOLESCENT.
+
+   </body></html>
+
