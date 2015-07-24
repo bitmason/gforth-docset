@@ -7,6 +7,8 @@ The docset is generated from Gforth HTML documentation. As of version 0.7.0, thi
 
 The original Gforth HTML docs are included here (under GNU Free Documentation License 1.1) and so is a Gforthdoc2set.py script that can re-generate the docset from the HTML.
 
+![alt text](/img/icon.png "Gforth logo")
+
 Gforth:
 http://www.gnu.org/software/gforth/
 
