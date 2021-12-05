@@ -1,7 +1,7 @@
 Gforth Docset for Dash
 ======================
 
-Created by Darren Stone ([@emptybits](https://twitter.com/emptybits)).
+Created by Darren Stone.
 
 [Gforth](http://www.gnu.org/software/gforth/) is the [Forth](https://en.wikipedia.org/wiki/Forth_(programming_language)) implementation of the GNU project. This docset works with [Dash](http://kapeli.com/dash).  
 
